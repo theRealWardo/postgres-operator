@@ -319,6 +319,7 @@ func (c *Cluster) generatePodTemplate(
 	cloneDescription *spec.CloneDescription,
 	dockerImage *string,
 	sidecars *[]spec.Sidecar,
+	imagePullSecrets []v1.LocalObjectReference,
 	customPodEnvVars map[string]string,
 ) (*v1.PodTemplateSpec, error) {
 	spiloConfiguration := c.generateSpiloJSONConfiguration(pgParameters, patroniParameters)
@@ -475,6 +476,7 @@ func (c *Cluster) generatePodTemplate(
 		TerminationGracePeriodSeconds: &terminateGracePeriodSeconds,
 		Containers:                    []v1.Container{container},
 		Tolerations:                   c.tolerations(tolerationsSpec),
+		ImagePullSecrets:              imagePullSecrets,
 	}
 
 	if affinity := c.nodeAffinity(); affinity != nil {
@@ -659,7 +661,7 @@ func (c *Cluster) generateStatefulSet(spec *spec.PostgresSpec) (*v1beta1.Statefu
 			customPodEnvVars = cm.Data
 		}
 	}
-	podTemplate, err := c.generatePodTemplate(c.Postgresql.GetUID(), resourceRequirements, resourceRequirementsScalyrSidecar, &spec.Tolerations, &spec.PostgresqlParam, &spec.Patroni, &spec.Clone, &spec.DockerImage, &spec.Sidecars, customPodEnvVars)
+	podTemplate, err := c.generatePodTemplate(c.Postgresql.GetUID(), resourceRequirements, resourceRequirementsScalyrSidecar, &spec.Tolerations, &spec.PostgresqlParam, &spec.Patroni, &spec.Clone, &spec.DockerImage, &spec.Sidecars, spec.ImagePullSecrets, customPodEnvVars)
 	if err != nil {
 		return nil, fmt.Errorf("could not generate pod template: %v", err)
 	}

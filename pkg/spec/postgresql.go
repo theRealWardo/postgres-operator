@@ -126,14 +126,15 @@ type PostgresSpec struct {
 	// load balancers' source ranges are the same for master and replica services
 	AllowedSourceRanges []string `json:"allowedSourceRanges"`
 
-	NumberOfInstances  int32                `json:"numberOfInstances"`
-	Users              map[string]UserFlags `json:"users"`
-	MaintenanceWindows []MaintenanceWindow  `json:"maintenanceWindows,omitempty"`
-	Clone              CloneDescription     `json:"clone"`
-	ClusterName        string               `json:"-"`
-	Databases          map[string]string    `json:"databases,omitempty"`
-	Tolerations        []v1.Toleration      `json:"tolerations,omitempty"`
-	Sidecars           []Sidecar            `json:"sidecars,omitempty"`
+	NumberOfInstances  int32                     `json:"numberOfInstances"`
+	Users              map[string]UserFlags      `json:"users"`
+	MaintenanceWindows []MaintenanceWindow       `json:"maintenanceWindows,omitempty"`
+	Clone              CloneDescription          `json:"clone"`
+	ClusterName        string                    `json:"-"`
+	Databases          map[string]string         `json:"databases,omitempty"`
+	Tolerations        []v1.Toleration           `json:"tolerations,omitempty"`
+	Sidecars           []Sidecar                 `json:"sidecars,omitempty"`
+	ImagePullSecrets   []v1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
 }
 
 // PostgresqlList defines a list of PostgreSQL clusters.
