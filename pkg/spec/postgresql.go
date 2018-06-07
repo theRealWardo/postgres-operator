@@ -135,6 +135,7 @@ type PostgresSpec struct {
 	Tolerations        []v1.Toleration           `json:"tolerations,omitempty"`
 	Sidecars           []Sidecar                 `json:"sidecars,omitempty"`
 	ImagePullSecrets   []v1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
+	Env                []v1.EnvVar               `json:"env,omitempty"`
 }
 
 // PostgresqlList defines a list of PostgreSQL clusters.
