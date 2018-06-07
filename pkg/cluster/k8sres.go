@@ -320,6 +320,7 @@ func (c *Cluster) generatePodTemplate(
 	dockerImage *string,
 	sidecars *[]spec.Sidecar,
 	imagePullSecrets []v1.LocalObjectReference,
+	env *[]v1.EnvVar,
 	customPodEnvVars map[string]string,
 ) (*v1.PodTemplateSpec, error) {
 	spiloConfiguration := c.generateSpiloJSONConfiguration(pgParameters, patroniParameters)
@@ -409,6 +410,9 @@ func (c *Cluster) generatePodTemplate(
 
 	if cloneDescription.ClusterName != "" {
 		envVars = append(envVars, c.generateCloneEnvironment(cloneDescription)...)
+	}
+	if env != nil && len(*env) > 0 {
+		envVars = append(envVars, *env...)
 	}
 
 	var names []string
@@ -661,7 +665,7 @@ func (c *Cluster) generateStatefulSet(spec *spec.PostgresSpec) (*v1beta1.Statefu
 			customPodEnvVars = cm.Data
 		}
 	}
-	podTemplate, err := c.generatePodTemplate(c.Postgresql.GetUID(), resourceRequirements, resourceRequirementsScalyrSidecar, &spec.Tolerations, &spec.PostgresqlParam, &spec.Patroni, &spec.Clone, &spec.DockerImage, &spec.Sidecars, spec.ImagePullSecrets, customPodEnvVars)
+	podTemplate, err := c.generatePodTemplate(c.Postgresql.GetUID(), resourceRequirements, resourceRequirementsScalyrSidecar, &spec.Tolerations, &spec.PostgresqlParam, &spec.Patroni, &spec.Clone, &spec.DockerImage, &spec.Sidecars, spec.ImagePullSecrets, &spec.Env, customPodEnvVars)
 	if err != nil {
 		return nil, fmt.Errorf("could not generate pod template: %v", err)
 	}
